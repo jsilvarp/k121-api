@@ -21,18 +21,22 @@ describe('Secret controller', function () {
         sinon.stub(model, 'find');
         sinon.stub(model, 'create');
         sinon.stub(model, 'remove');
+        sinon.stub(model, 'findOne');
+        sinon.stub(model, 'update');
     });
 
     afterEach(function () {
         model.find.restore();
         model.create.restore();
         model.remove.restore();
+        model.findOne.restore();
+        model.update.restore();
     });
 
     describe('List all People', function () {
         it('should return an array', function () {
             model.find.returns(q.resolve([person]));
-            controller.get({})
+            controller.getAll()
                 .then(function (res) {
                     expect(model.find.calledOnce).to.be.true;
                     expect(model.find.calledWith()).to.be.true;
@@ -43,7 +47,7 @@ describe('Secret controller', function () {
 
         it('should test the error behavior', function () {
             model.find.returns(q.reject('err'));
-            controller.get({})
+            controller.getAll()
                 .then(function (res) {
                     expect(model.find.calledOnce).to.be.true;
                     expect(model.find.calledWith()).to.be.true;
@@ -55,22 +59,22 @@ describe('Secret controller', function () {
 
     describe('Get a single person', function () {
         it('should return an object', function () {
-            model.find.returns(q.resolve(person));
+            model.findOne.returns(q.resolve(person));
             controller.get({ _id: personId })
                 .then(function (res) {
-                    expect(model.find.calledOnce).to.be.true;
-                    expect(model.find.calledWith()).to.be.true;
+                    expect(model.findOne.calledOnce).to.be.true;
+                    expect(model.findOne.calledWith()).to.be.true;
                     expect(res.data).to.deep.equal(person);
                     expect(res.statusCode).to.be.equal(200);
                 });
         });
 
         it('should test the error behavior', function () {
-            model.find.returns(q.reject('err'));
+            model.findOne.returns(q.reject('err'));
             controller.get({ _id: personId })
                 .then(function (res) {
-                    expect(model.find.calledOnce).to.be.true;
-                    expect(model.find.calledWith()).to.be.true;
+                    expect(model.findOne.calledOnce).to.be.true;
+                    expect(model.findOne.calledWith()).to.be.true;
                     expect(res.data).to.be.equal('err');
                     expect(res.statusCode).to.be.equal(422);
                 });
@@ -89,7 +93,7 @@ describe('Secret controller', function () {
                 });
         });
 
-        it('should test the error behavior', function (done) {
+        it('should test the error behavior', function () {
             model.create.returns(q.reject('err'));
             controller.insert(person)
                 .then(function (response) {
@@ -97,7 +101,54 @@ describe('Secret controller', function () {
                     expect(model.create.calledWith(person)).to.be.true;
                     expect(response.data).to.be.equal('err');
                     expect(response.statusCode).to.be.equal(422);
-                    done();
+                });
+        });
+    });
+
+    describe('Update a existing person', function () {
+        it('should update successfully and return the object', function () {
+            model.update.returns(q.resolve(person));
+            controller.update(personId, person)
+                .then(function (response) {
+                    expect(model.update.calledOnce).to.be.true;
+                    expect(model.update.calledWith(person)).to.be.true;
+                    expect(response.data).to.deep.equal(person);
+                    expect(response.statusCode).to.be.equal(200);
+                });
+        });
+
+        it('should test the error behavior', function () {
+            model.update.returns(q.reject('err'));
+            controller.update(personId, person)
+                .then(function (response) {
+                    expect(model.update.calledOnce).to.be.true;
+                    expect(model.update.calledWith(person)).to.be.true;
+                    expect(response.data).to.be.equal('err');
+                    expect(response.statusCode).to.be.equal(422);
+                });
+        });
+    });
+
+    describe('Delete a existing person', function () {
+        it('should delete successfully', function () {
+            model.remove.returns(q.resolve());
+            controller.delete(personId)
+                .then(function (response) {
+                    expect(model.remove.calledOnce).to.be.true;
+                    expect(model.remove.calledWith(person)).to.be.true;
+                    expect(response.data).to.deep.equal(person);
+                    expect(response.statusCode).to.be.equal(200);
+                });
+        });
+
+        it('should test the error behavior', function () {
+            model.remove.returns(q.reject('err'));
+            controller.delete(personId, person)
+                .then(function (response) {
+                    expect(model.remove.calledOnce).to.be.true;
+                    expect(model.remove.calledWith(person)).to.be.true;
+                    expect(response.data).to.be.equal('err');
+                    expect(response.statusCode).to.be.equal(422);
                 });
         });
     });

@@ -11,10 +11,10 @@ NodeJS Based API Server
  * [Express](http://expressjs.com)
 
 
-### Instalaçãoo
+### Instalação
 
 	git clone https://github.com/jpauloeti/k121.git
-    cd k121
+    cd k121/backend
     npm install
 
 ---

@@ -66,7 +66,7 @@ router.get('/draw', function (req, res) {
     controller.draw()
         .then(function (message) {
             response(res, message);
-        }); 
+        });
 });
 
 /**
