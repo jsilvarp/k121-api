@@ -1,0 +1,15 @@
+{
+	"database": {
+		"host": [
+			"cluster0-shard-00-00-su05q.mongodb.net:27017",
+			"cluster0-shard-00-01-su05q.mongodb.net:27017",
+			"cluster0-shard-00-02-su05q.mongodb.net:27017"
+		],
+		"dbName": "k121",
+		"dbUser": "root",
+		"dbPass": "Qzgpm7Zw9vuuEOAO",
+		"authSource": "admin",
+		"ssl": true,
+		"replicaSetName": "Cluster0-shard-0"
+	}
+}
