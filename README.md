@@ -4,12 +4,20 @@ NodeJS Based API Server
 
 ---
 
-### Tecnologias
+### Tecnologias e módulos
 
  * [NodeJS](http://nodejs.org)
  * [MongoDB na nuvem](https://www.mongodb.com/) ([MongoAtlas](http://cloud.mongodb.com))
  * [Express](http://expressjs.com)
+ * [MochaJS](https://mochajs.org/)
+ * [Sendmail](https://github.com/guileen/node-sendmail)
+ * [APIDoc](http://apidocjs.com/)
 
+### Documentação API
+	[https://k121-app.herokuapp.com/docs](https://k121-app.herokuapp.com/docs)
+
+### Demo
+	[https://k121-api.herokuapp.com](https://k121-api.herokuapp.com)
 
 ### Instalação
 
