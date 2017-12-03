@@ -1,58 +1,60 @@
-'use strict';
+'use strict'
 
-var sinon = require('sinon'),
-    chai = require('chai'),
-    expect = chai.expect,
-    _ = require('lodash');
+import 'babel-polyfill'
 
-var draw = require('../../../lib/draw');
+import sinon from 'sinon'
+import chai from 'chai'
+import _ from 'lodash'
+import draw from '../../../lib/draw'
 
-describe('Draw librart', function () {
-    var people = [
-        {
-            "name": "A",
-            "email": "a@joaopaulo.eti.br",
-            "friend": ""
-        },
-        {
-            "name": "B",
-            "email": "b@joaopaulo.eti.br",
-            "friend": ""
-        },
-        {
-            "name": "C",
-            "email": "c@joaopaulo.eti.br",
-            "friend": ""
-        },
-        {
-            "name": "D",
-            "email": "d@joaopaulo.eti.br",
-            "friend": ""
-        },
-        {
-            "name": "E",
-            "email": "e@joaopaulo.eti.br",
-            "friend": ""
-        }
-    ];
+const expect = chai.expect
 
-    describe('Test draw function', function () {
-        var result = draw(people);
+describe('Draw librart', () => {
+  const people = [
+    {
+      "name": "A",
+      "email": "a@joaopaulo.eti.br",
+      "friend": ""
+    },
+    {
+      "name": "B",
+      "email": "b@joaopaulo.eti.br",
+      "friend": ""
+    },
+    {
+      "name": "C",
+      "email": "c@joaopaulo.eti.br",
+      "friend": ""
+    },
+    {
+      "name": "D",
+      "email": "d@joaopaulo.eti.br",
+      "friend": ""
+    },
+    {
+      "name": "E",
+      "email": "e@joaopaulo.eti.br",
+      "friend": ""
+    }
+  ]
 
-        it('should return shuffled array', function () {
-            expect(result).to.not.be.equal(people);
-        });
+  describe('Test draw function', () => {
+    const result = draw(people)
 
-        it('should not have yourself as friend', function () {
-            _.forEach(result, function (p) {
-                expect(p.friend).to.not.be.equal(p.name);
-            });
-        });
+    it('should return shuffled array', () => {
+      expect(result).to.not.be.equal(people)
+    })
 
-        it('should the last person have the first one as friend', function () {
-            var last = result.length-1;
-            expect(result[last].friend).to.be.equal(result[0].name)
-        });
-    });
+    it('should not have yourself as friend', () => {
+      _.forEach(result, function (p) {
+          expect(p.friend).to.not.be.equal(p.name)
+      })
+    })
 
-});
+    it('should the last person have the first one as friend', () => {
+      var last = result.length-1
+      expect(result[last].friend).to.be.equal(result[0].name)
+    })
+  })
+
+})

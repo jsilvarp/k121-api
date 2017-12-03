@@ -1,20 +1,20 @@
-'use strict';
+'use strict'
 
-var express = require('express');
-var controller = require('./secret.controller');
+import express from 'express'
+import SecretController from './secret.controller'
 
-var router = express.Router();
+const router = express.Router()
 
-var response = function (res, message) {
-    res.status(message.statusCode);
-    res.json(message.data);
-};
+const response = (res, message) => {
+  res.status(message.statusCode)
+  res.json(message.data)
+}
 
 /**
  * @api {get} /api/secret Get all people
  * @apiVersion 1.0.0
  * @apiGroup Secret
- * 
+ *
  * @apiSuccess {Object[]} secret People array
  * @apiSuccess {String} secret._id Person ID
  * @apiSuccess {String} secret.name Person name
@@ -28,22 +28,20 @@ var response = function (res, message) {
  *      "email": "contato@joaopaulo.eti.br",
  *      "friend": "Paiva"
  *    }]
- * 
+ *
  * @apiErrorExample {json} List error
  *    HTTP/1.1 500 Internal Server Error
  */
-router.get('/', function (req, res) {
-    controller.getAll()
-        .then(function (message) {
-            response(res, message);
-        });
-});
+router.get('/', async (req, res) => {
+  const message = await SecretController.getAll()
+  response(res, message)
+})
 
 /**
  * @api {get} /api/secret/draw Draw people
  * @apiVersion 1.0.0
  * @apiGroup Secret
- * 
+ *
  * @apiSuccess {Object[]} secret People array
  * @apiSuccess {String} secret._id Person ID
  * @apiSuccess {String} secret.name Person name
@@ -57,23 +55,21 @@ router.get('/', function (req, res) {
  *      "email": "contato@joaopaulo.eti.br",
  *      "friend": "Paiva"
  *    }]
- * 
+ *
  * @apiErrorExample {json} List error
  *    HTTP/1.1 500 Internal Server Error
  */
 
-router.get('/draw', function (req, res) {
-    controller.draw()
-        .then(function (message) {
-            response(res, message);
-        });
-});
+router.get('/draw', async (req, res) => {
+  const message = await SecretController.draw()
+  response(res, message)
+})
 
 /**
  * @api {get} /api/secret/:id Get specific person
  * @apiVersion 1.0.0
  * @apiGroup Secret
- * 
+ *
  * @apiParam {String} id Person's ID
  *
  * @apiSuccess {Object} secret Person
@@ -89,29 +85,27 @@ router.get('/draw', function (req, res) {
  *      "email": "contato@joaopaulo.eti.br",
  *      "friend": "Paiva"
  *    }
- *  
+ *
  * @apiErrorExample {json} List error
  *    HTTP/1.1 500 Internal Server Error
  */
-router.get('/:id', function (req, res) {
-    controller.get({ _id: req.params.id })
-        .then(function (message) {
-            response(res, message);
-        });
-});
+router.get('/:id', async (req, res) => {
+  const message = await SecretController.get({ _id: req.params.id })
+  response(res, message)
+})
 
 /**
- * @api {put} /api/secret Insert a new person
+ * @api {post} /api/secret Insert a new person
  * @apiVersion 1.0.0
  * @apiGroup Secret
- * 
+ *
  * @apiParamExample {json} Input
  *    {
  *      "name": "João Paulo",
  *      "email": "contato@joaopaulo.eti.br",
  *      "friend": "Paiva"
  *    }
- * 
+ *
  * @apiSuccess {Object} secret Person
  * @apiSuccess {String} secret._id Person ID
  * @apiSuccess {String} secret.name Person name
@@ -125,44 +119,40 @@ router.get('/:id', function (req, res) {
  *      "email": "contato@joaopaulo.eti.br",
  *      "friend": "Paiva"
  *    }
- * 
+ *
  * @apiErrorExample {json} Register error
  *    HTTP/1.1 500 Internal Server Error
  */
-router.put('/', function (req, res) {
-    controller.insert(req.body)
-        .then(function (message) {
-            response(res, message);
-        });
-});
+router.post('/', async (req, res) => {
+  const message = await SecretController.insert(req.body)
+  response(res, message)
+})
 
 /**
  * @api {delete} /api/secret/:id Delete a person
  * @apiVersion 1.0.0
  * @apiGroup Secret
- * 
+ *
  * @apiParam {String} id Person's ID
- * 
+ *
  * @apiSuccessExample {json} Success-Response
  *    HTTP/1.1 200 OK
- * 
+ *
  * @apiErrorExample {json} Delete error
  *    HTTP/1.1 500 Internal Server Error
  */
-router.delete('/:id', function (req, res) {
-    controller.delete({ _id: req.params.id })
-        .then(function (message) {
-            response(res, message);
-        });
-});
+router.delete('/:id', async (req, res) => {
+  const message = await SecretController.delete({ _id: req.params.id })
+  response(res, message)
+})
 
 /**
- * @api {post} /api/secret/:id Update a person
+ * @api {put} /api/secret/:id Update a person
  * @apiVersion 1.0.0
  * @apiGroup Secret
  *
  * @apiParam {String} id Person's ID
- * 
+ *
  * @apiParamExample {json} Input
  *    {
  *      "name": "João Paulo",
@@ -172,15 +162,14 @@ router.delete('/:id', function (req, res) {
  *
  * @apiSuccessExample {json} Success-Response
  *    HTTP/1.1 200 OK
- * 
+ *
  * @apiErrorExample {json} Update error
  *    HTTP/1.1 500 Internal Server Error
  */
-router.post('/:id', function (req, res) {
-    controller.update(req.params.id, req.body)
-        .then(function (message) {
-            response(res, message);
-        });
-});
+router.put('/:id', async (req, res) => {
+  const message = await SecretController.update(req.params.id, req.body)
+  response(res, message)
+})
 
-module.exports = router;
+
+export default router

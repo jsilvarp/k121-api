@@ -1,86 +1,79 @@
-'use strict';
+'use strict'
 
-var mongoose = require('mongoose'),
-	Secret = require('./secret.model'),
-	Q = require('q'),
-	_ = require('lodash'),
-	draw = require('../../lib/draw'),
-	sendMail = require('../../lib/sendMail');
+import mongoose from 'mongoose'
+import Secret from './secret.model'
+import Q from 'q'
+import _ from 'lodash'
+import draw from '../../lib/draw'
+import sendMail from '../../lib/sendMail'
 
-var responseMessage = function (data, statusCode) {
-  return {
+const responseMessage = (data, statusCode) => (
+  {
     data: data,
     statusCode: statusCode
-  };
-};
+  }
+)
 
-exports.get = function (selector) {
-	return Secret.findOne(selector)
-		.then(function(person) {
-			return responseMessage(person, 200);
-		})
-		.fail(function (err) {
-			return responseMessage(err, 422);
-		});
-};
+exports.get = async selector => {
+  try {
+    const person = await Secret.findOne(selector)
+    return responseMessage(person, 200)
+  } catch (err) {
+    return responseMessage(err, 422)
+  }
+}
 
-exports.getAll = function () {
-	return Secret.find()
-		.then(function(people) {
-			return responseMessage(people, 200);
-		})
-		.fail(function (err) {
-			return responseMessage(err, 422);
-		});
-};
+exports.getAll = async () => {
+  try {
+    const people = await Secret.find()
+    return responseMessage(people, 200)
+  } catch (err) {
+    return responseMessage(err, 422)
+  }
+}
 
-exports.delete = function (selector) {
-	return Secret.remove(selector)
-		.then(function(person) {
-			return responseMessage(person, 200);
-		})
-		.fail(function (err) {
-			return responseMessage(err, 422);
-		});
-};
+exports.delete = async selector => {
+  try {
+    const person = await Secret.remove(selector)
+    return responseMessage(person, 200)
+  } catch (err) {
+		return responseMessage(err, 422);
+  }
+}
 
-exports.insert = function (data) {
-	return Secret.create(data)
-		.then(function (person) {
-			return responseMessage(person, 200);
-		})
-		.fail(function (err) {
-			return responseMessage(err, 422);
-		});
-};
+exports.insert = async data => {
+  try {
+	  const person = await Secret.create(data)
+    return responseMessage(person, 201)
+  } catch (err) {
+    return responseMessage(err, 422)
+  }
+}
 
-exports.update = function (id, data) {
-	return Secret.update({ _id: id }, data)
-		.then(function (person) {
-			return responseMessage(person, 200);
-		})
-		.fail(function (err) {
-			return responseMessage(err, 422);
-		});
-};
+exports.update = async (id, data) => {
+  try {
+    const person = await Secret.update({ _id: id }, data)
+    return responseMessage(person, 200)
+  } catch (err) {
+		return responseMessage(err, 422);
+  }
+}
 
-exports.draw = function () {
-	return Secret.find()
-		.then(function (people) {
-			return draw(people);
-		})
-		.then(function (people) {
-			var promises = _.map(people, function (person) {
-				return Secret.update({ _id: person._id }, person);
-			});
+exports.draw = async () => {
+  try {
+    const everybody = await Secret.find()
+    const newDraw = draw(everybody)
+    await updatePeople(newDraw)
+    sendMail(newDraw)
+    return responseMessage(newDraw, 200)
+  } catch (err) {
+    return responseMessage(err, 422);
+  }
+}
 
-			return [people, Q.all(promises)];
-		})
-		.spread(function (people) {
-			sendMail(people);
-			return responseMessage(people, 200);
-		})
-		.fail(function (err) {
-			return responseMessage(err, 422);
-		})
-};
+const updatePeople = async people => {
+  const promises = _.map(people, async person => {
+    return await Secret.update({ _id: person._id }, person)
+  })
+  return Q.all(promises)
+}

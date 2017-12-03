@@ -1,39 +1,42 @@
-var express = require('express'),
-	app = express(),
-	port = process.env.PORT || 3000,
-	mongoose = require('mongoose'),
-	bodyParser = require('body-parser'),
-	cors = require('cors'),
-	config = require('config')
-	util = require('util'),
-	q = require('q'),
-	require('./api/secret/secret.model');
+import express from 'express'
+import mongoose from 'mongoose'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import config from 'config'
+import util from 'util'
+import Q from 'q'
+import secretRoute from './api/secret'
+import './api/secret/secret.model'
 
-var connString = util.format('mongodb://%s:%s@%s/%s?ssl=%s&replicaSet=%s&authSource=%s', 
-					config.get('database.dbUser'), 
-					config.get('database.dbPass'), 
-					config.get('database.host'), 
-					config.get('database.dbName'), 
-					config.get('database.ssl'), 
-					config.get('database.replicaSetName'), 
-					config.get('database.authSource')
-				 );
-				 
+const Server = express()
+const port = process.env.PORT || 3000
 
-mongoose.connect(connString);
-mongoose.Promise = q.Promise;
+const {
+  dbUser,
+  dbPass,
+  host,
+  dbName,
+  ssl,
+  replicaSetName,
+  authSource
+} = config.get('database')
 
-app.use(bodyParser.json());
-app.use(cors());
+const connString = `mongodb://${dbUser}:${dbPass}@${host}/${dbName}?ssl=${ssl}&replicaSet=${replicaSetName}&authSource=${authSource}`;
 
-app.use('/api/secret', require('./api/secret'));
+mongoose.connect(connString)
+mongoose.Promise = Q.Promise
 
-app.use(function(req, res) {
+Server.use(bodyParser.json())
+Server.use(cors())
+
+Server.use('/api/secret', secretRoute)
+
+Server.use((req, res) => {
 	res.status(404).send({url: req.originalUrl + ' not found'})
-});
+})
 
-app.listen(port);
+Server.listen(port)
 
-console.log('REST Api inicializada na porta ' + port);
+console.log('REST Api inicializada na porta ' + port)
 
-module.exports = app;
+export default Server

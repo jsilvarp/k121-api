@@ -12,6 +12,9 @@ NodeJS Based API Server
  * [MochaJS](https://mochajs.org/)
  * [Sendmail](https://github.com/guileen/node-sendmail)
  * [APIDoc](http://apidocjs.com/)
+ * [ES6](http://es6-features.org/)
+ * [BabelJS](https://babeljs.io/)
+ * [Nodemon](https://nodemon.io/)
 
 ### Documentação API
 [https://k121-app.herokuapp.com/docs](https://k121-app.herokuapp.com/docs)
